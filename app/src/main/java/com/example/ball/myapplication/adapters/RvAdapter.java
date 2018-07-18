@@ -1,16 +1,19 @@
 package com.example.ball.myapplication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.ball.myapplication.model.Anime;
+import com.example.ball.myapplication.activites.AimeActivity;
 import com.example.ball.myapplication.R;
 import java.util.List;
 
@@ -43,8 +46,25 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.MyViewHolder> {
         View view ;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.anime_item_row,parent,false);
-        // click listener here
-        return new MyViewHolder(view);
+        final MyViewHolder viewHolder = new MyViewHolder(view);
+        viewHolder.view_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext, AimeActivity.class);
+                // sending data process
+                i.putExtra("anime_name",mData.get(viewHolder.getAdapterPosition()).getName());
+                i.putExtra("anime_description",mData.get(viewHolder.getAdapterPosition()).getDescription());
+                i.putExtra("anime_studio",mData.get(viewHolder.getAdapterPosition()).getStudio());
+                i.putExtra("anime_category",mData.get(viewHolder.getAdapterPosition()).getCategorie());
+                i.putExtra("anime_nb_episode",mData.get(viewHolder.getAdapterPosition()).getNb_episode());
+                i.putExtra("anime_rating",mData.get(viewHolder.getAdapterPosition()).getRating());
+                i.putExtra("anime_img",mData.get(viewHolder.getAdapterPosition()).getImage_url());
+
+                mContext.startActivity(i);
+
+            }
+        });
+        return viewHolder;
     }
 
     @Override
@@ -67,12 +87,14 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout view_container ;
         TextView tvname,tv_rate,tvstudio,tvcat;
         ImageView AnimeThumbnail;
 
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            view_container = itemView.findViewById(R.id.container);
             tvname = itemView.findViewById(R.id.rowname);
             tvstudio = itemView.findViewById(R.id.studio);
             tv_rate = itemView.findViewById(R.id.rating);
